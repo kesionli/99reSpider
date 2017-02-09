@@ -66,6 +66,7 @@ var selectVideoData=function(html,complete){
 var getVideoUrl = function(index,pages,complete){
     if(index>=pages.length){
         complete();
+        return;
     }
 
       //try to get video url
