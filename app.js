@@ -25,7 +25,7 @@ server.on('request',function(req,res){
         var qsObj = url.parse(req.url,true).query;
         res.writeHead(200,{'Content-Type':'application/json'});  
         var skip=0;
-        var limit = 30;
+        var limit = 24;
 
         if(qsObj.p==0){
             skip = 0*limit;
@@ -34,7 +34,7 @@ server.on('request',function(req,res){
             skip = (parseInt(qsObj.p)-1)*limit;
         }
 
-        db.query('pages',{},skip,limit,(rows)=>{
+        db.queryPage('pages',{},skip,limit,(rows)=>{
             var json = JSON.stringify(rows);
             res.write(json);
             res.end();
@@ -53,6 +53,7 @@ server.on('request',function(req,res){
         }
         else if(qsObj.spider=='last'){
             //to get last 10 pages videos
+            spider.run(1,10);
             res.writeHead(200,{'Content-Type':'text/html'});  
             res.write('重新爬取前10页数据，大概要半小时。。。Σ( ° △ °|||)︴');
             res.end();

@@ -8,8 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "启动程序",
-            "program": "d:/MyCode/99reSpider/app.js",
-            "cwd": "d:/MyCode/99reSpider"
+            "program": "${workspaceRoot}/app.js",
+            "cwd": "${workspaceRoot}"
         },
         {
             "type": "node",

@@ -22,7 +22,7 @@
         });
     };
 
-    var query = function(collName,filter,skip,limit,callback){
+    var queryPage = function(collName,filter,skip,limit,callback){
         var db = createDb();
         db.open((err,db)=>{
             var coll = db.collection(collName);
@@ -42,4 +42,4 @@
     }
 
     exports.insert = insert;
-    exports.query = query;
+    exports.queryPage = queryPage;

@@ -2,7 +2,7 @@ var Agent = require('socks5-http-client/lib/Agent');
 var request = require('request');
 var cheerio = require('cheerio');
 var db = require('./db');
-
+var sleepTime=1000;
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -17,16 +17,12 @@ var getData= function(pageIndex,maxPageIndex){
     socksGet(url,(res)=>{
         selectVideoData(res.body,()=>{
             console.log('get page data '+pageIndex+' success .');
-            sleep(5000).then(()=>{
-                getData(pageIndex+1,maxPageIndex);
-            });
+            getData(pageIndex+1,maxPageIndex);
         });
       
     },(err)=>{
         console.error('get page '+pageIndex+' error ,go to next page .');
-        sleep(5000).then(()=>{
-             getData(pageIndex+1,maxPageIndex);
-        });
+        getData(pageIndex+1,maxPageIndex);
     });
 
 }
@@ -91,20 +87,16 @@ var getVideoUrl = function(index,pages,complete){
             console.log(page.imgSrc);
             console.log(page.videoUrl);
             db.insert('pages',page);
-            sleep(5000).then(()=>{
-                var nextIndex = index+1;
-                getVideoUrl(nextIndex,pages,complete);
-            });
+           var nextIndex = index+1;
+            getVideoUrl(nextIndex,pages,complete);
         },(err)=>{
             console.log(page.href);
             console.log(page.title);
             console.log(page.imgSrc);
             console.log(page.videoUrl);
             db.insert('pages',page);
-            sleep(5000).then(()=>{
-                var nextIndex = index+1;
-                getVideoUrl(nextIndex,pages,complete);
-            });
+            var nextIndex = index+1;
+            getVideoUrl(nextIndex,pages,complete);;
         });
 }
 
