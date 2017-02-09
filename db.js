@@ -22,4 +22,24 @@
         });
     };
 
+    var query = function(collName,filter,skip,limit,callback){
+        var db = createDb();
+        db.open((err,db)=>{
+            var coll = db.collection(collName);
+            coll.find(filter).sort({title:1}).skip(skip).limit(limit).toArray((err,r)=>{
+                 if(!err){
+                    callback(r);
+                    //db.close();        
+                }
+                else{
+                    console.error(err);
+                    callback([]);
+                }
+                db.close();
+            });
+        
+        });
+    }
+
     exports.insert = insert;
+    exports.query = query;
