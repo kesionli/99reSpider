@@ -1,4 +1,5 @@
 var Agent = require('socks5-http-client/lib/Agent');
+var fs = require('fs');
 var request = require('request');
 var cheerio = require('cheerio');
 var db = require('./db');
@@ -61,12 +62,13 @@ var selectVideoData=function(html,complete){
         var href =$(a).attr('href');
         var title =$(a).attr('title');
         var screenShotSrc = $(img).attr('src');
-
+        var videoId = getVideoId(screenShotSrc);
         pages.push({
                 href:href,
                 title:title,
                 imgSrc:screenShotSrc,
-                videoUrl:''
+                videoUrl:'',
+                videoId:videoId
         });
 
      
@@ -102,6 +104,21 @@ var getVideoUrl = function(index,pages,complete){
                 console.log('can not find video url by page '+page.href+' may private video .');
             }
             page.videoUrl =  videoUrl;
+            if(page.videoUrl){
+                var videoFileName = page.videoId+'.mp4';
+                var r = request({
+                        url: page.videoUrl
+                    }).on('error',()=>{
+                        console.log('download video error .');
+                    }).on('response',(resp)=>{
+                       if(resp.statusCode===200){
+                            r.pipe(fs.createWriteStream(videoFileName)).on('finish',  ()=> {
+                                console.log('download video '+videoFileName+' finish .');
+                            });
+                       }
+                    });
+            }
+         
             console.log(page.href);
             console.log(page.title);
             console.log(page.imgSrc);
@@ -118,6 +135,11 @@ var getVideoUrl = function(index,pages,complete){
             var nextIndex = index+1;
             getVideoUrl(nextIndex,pages,complete);;
         });
+}
+
+var getVideoId = function(url){
+    var arr = url.split('/');
+    return arr[arr.length-3];
 }
 
 var socksGet=function(url,callback,errCallback){
