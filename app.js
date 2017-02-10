@@ -47,16 +47,21 @@ server.on('request',function(req,res){
 
         if(qsObj.spider=='all'){
             //to get all 99re vedios 
-            spider.run(1,1728);
+             db.remove('pages',{},(r)=>{
+                spider.run(1);
+            });
             res.writeHead(200,{'Content-Type':'text/html'});  
-            res.write('删除所有数据，重新爬取所有数据，大概要1天半左右。。。Σ( ° △ °|||)︴');
+            res.write('删除所有数据，重新爬取所有数据，要好久好久。。。Σ( ° △ °|||)︴');
             res.end();
         }
         else if(qsObj.spider=='last'){
             //to get last 10 pages videos
-            spider.run(1,10);
+            db.remove('pages',{},(r)=>{
+                spider.run(1,10);
+            });
+            
             res.writeHead(200,{'Content-Type':'text/html'});  
-            res.write('重新爬取前10页数据，大概要半小时。。。Σ( ° △ °|||)︴');
+            res.write('删除所有数据，重新爬取前10页数据，大概要半小时。。。Σ( ° △ °|||)︴');
             res.end();
         }
         else{

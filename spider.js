@@ -7,9 +7,29 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+var getMaxPageIndex = function(callback){
+    var url ='http://99re.com/?mode=async&action=get_block&block_id=list_videos_most_views&dir=&from2=1';
+     socksGet(url,(res)=>{
+        var $ = cheerio.load(res.body);
+        var maxPageIndex = $('.more-thumbs.btn.btn-more').data('total');
+        callback(maxPageIndex);
+        console.log('max page index is '+ maxPageIndex );
+    },(err)=>{
+        console.error('get max page index error .');
+    });
+}
+
 var getData= function(pageIndex,maxPageIndex){
+    if(maxPageIndex===undefined){
+        // if not input maxPageIndex , try to get maxPageIndex from web .
+        getMaxPageIndex((max)=>{
+            getData(pageIndex,max);
+        });
+        return;
+    }
 
     if(pageIndex>maxPageIndex){
+        console.log('get all data complete .');
         return;
     }
     console.log('start to get page '+pageIndex);
