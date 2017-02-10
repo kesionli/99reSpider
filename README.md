@@ -1,6 +1,7 @@
 # 99reSpider
 
 ### start 
+需要一个梯子，建立一个socks5代理 默认代理地址为127.0.0.1:1080  
 安装mongodb  
 git clone https://github.com/kklldog/99reSpider.git  
 node app.js
