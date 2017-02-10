@@ -1,8 +1,8 @@
 # 99reSpider
 
 ### start 
-安装mongodb
-git clone https://github.com/kklldog/99reSpider.git
+安装mongodb  
+git clone https://github.com/kklldog/99reSpider.git  
 node app.js
 ### 浏览
 http://localhost:3000
