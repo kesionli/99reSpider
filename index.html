@@ -59,19 +59,26 @@
         </div>
     </nav>
 
-    <div class="bodyContainer">
-        <div class="container">
-            <div class="row">
-               <div class="col-md-3 col-lg-3" ng-repeat="item in items">
-                    <div class="thumbnail v-item"  >
+    <div class="bodyContainer" >
+        <div class="container" >
+            <div class="row" >
+               <div class="col-md-3 col-lg-3" ng-repeat="item in items" ng-cloak>
+                    <div class="thumbnail v-item" >
                          <video style="width: 100%;height: 80%" src="{{item.videoUrl|trustUrl}}" poster="{{item.imgSrc}}" controls></video>     
                          <div>
                              <a target="_blank" ng-href="{{item.href}}">
-                                 {{item.title}}
+                               {{item.title}}
                              </a>
                          </div>
                     </div>
-                </div>    
+                </div>
+            </div>
+            <div class="row">
+               <div class="col-md-12 col-lg-12">
+                    <button class="btn btn-default" style="width: 100%;margin:0 0 10px 0" ng-click="getNextPageData()" ng-disabled="gettingData">
+                        <span ng-show="!gettingData">加载更多</span><span ng-show="gettingData">正在加载...</span>
+                    </button>
+               </div>
             </div>
         </div>
     </div>
@@ -94,10 +101,15 @@
         app.controller('ctrl',function($scope,$http){
             $scope.items = [];
             var pageIndex=0;
+            $scope.gettingData = false;
 
             $scope.getNextPageData=function(){
-                var url ="/q?p="+ (pageIndex+1)+'&_='+new Date();
+                if( $scope.gettingData){return};
+                $scope.gettingData = true;
+                pageIndex = pageIndex+1;
+                var url ="/q?p="+ pageIndex + '&_=' + Date.parse(new Date());
                 $http.get(url).then((r)=>{
+                    $scope.gettingData = false;
                     r.data.forEach((i)=>{
                         // i.videoUrl=i.videoUrl+'/';
                         $scope.items.push(i);

@@ -47,6 +47,7 @@ server.on('request',function(req,res){
 
         if(qsObj.spider=='all'){
             //to get all 99re vedios 
+            spider.run(1,1728);
             res.writeHead(200,{'Content-Type':'text/html'});  
             res.write('删除所有数据，重新爬取所有数据，大概要1天半左右。。。Σ( ° △ °|||)︴');
             res.end();
@@ -68,7 +69,7 @@ server.on('request',function(req,res){
     }
     else{
         res.writeHead(404,{'Content-Type':'text/html'});  
-        res.write('not find page');
+        res.write('Not find');
         res.end();
     }
    
