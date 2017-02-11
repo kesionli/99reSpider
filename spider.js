@@ -145,6 +145,7 @@ var getVideoId = function(url){
 var socksGet=function(url,callback,errCallback){
     request({
         url: url,
+        timeout:30000,
         agentClass: Agent,
         agentOptions: {
             socksHost: '127.0.0.1', // Defaults to 'localhost'.
