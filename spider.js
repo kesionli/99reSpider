@@ -128,11 +128,14 @@ var getVideoUrl = function(index,pages,complete){
         });
 }
 
-var downloadVideo=function(videoUrl,videoName,tryTimes){
+var downloadVideo=function(videoUrl,videoName,complete,tryTimes){
     if(tryTimes === undefined){
         tryTimes = 3;
     }
     if(tryTimes == 0){
+        if(complete){
+            complete();
+        }
         return;
     }
     var r = request({
@@ -148,7 +151,36 @@ var downloadVideo=function(videoUrl,videoName,tryTimes){
                                 console.log('download video '+videoName+' finish .');
                             });
                        }
+                       if(complete){
+                            complete();
+                        }
                     });
+}
+
+var downloadVideoList = function(pages){
+    var promise = new Promise((r)=>{
+            setTimeout(function() {
+                r();
+            }, 1000);
+        });
+    for(var i=0;i<pages.length;i++){
+        var page = pages[i];
+        var p = new Promise((r)=>{
+                var fileName = page.videoId+'.mp4';
+                fs.exists(fileName,(exists)=>{
+                    if(exists){
+                        r();
+                    }
+                    else{
+                        downloadVideo(page.videoUrl,fileName,r);                        
+                    }
+                });
+            });
+        promise.then(()=>{
+            return p;
+        });
+        promise = p;
+    }
 }
 
 var getVideoId = function(url){
@@ -189,5 +221,5 @@ var socksGet=function(url,callback,errCallback,trytimes){
     });
 }
 
-exports.downloadVideo = downloadVideo;
+exports.downloadVideoList = downloadVideoList;
 exports.run = getData;
