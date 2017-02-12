@@ -1,74 +1,59 @@
   
     var Db = require('mongodb').Db;
     var Server = require('mongodb').Server;
+    var MongoClient = require('mongodb').MongoClient;
+    var db;
 
-    var createDb = function(){
-         var db = new Db('99re',new Server('localhost',27017))
-         return db;
+    var init = function(){
+        MongoClient.connect("mongodb://localhost:27017/99re",(err,database)=>{
+            if(err){
+                console.error(err);
+                return;
+            }
+            console.log('connect to db success');
+            db = database;
+        });
     }
 
     var insert = function(collName,data,callback){
-        createDb().open((err,db)=>{
-            if(err){
-                console.error(err);
+        var coll = db.collection(collName);
+        coll.save(data,(err,r)=>{
+            if(!err){
+                console.log('save to '+collName+' success !'); 
             }
-            else{
-                var coll = db.collection(collName);
-                coll.save(data,(err,r)=>{
-                    if(!err){
-                        console.log('save to '+collName+' success !'); 
-                    }
-                    if(callback){
-                        callback(r);
-                    }
-                    db.close();                                                                                                         
-                });
+            if(callback){
+                callback(r);
             }
         });
     };
 
     var queryPage = function(collName,filter,skip,limit,callback){
-        createDb().open((err,db)=>{
-            if(err){
-                console.error(err);
-                return;
+        var coll = db.collection(collName);
+        coll.find(filter).sort({videoId:1}).skip(skip).limit(limit).toArray((err,r)=>{
+            if(!err){
+                callback(r);
             }
-            var coll = db.collection(collName);
-            coll.find(filter).sort({title:1}).skip(skip).limit(limit).toArray((err,r)=>{
-                 if(!err){
-                    callback(r);
-                }
-                else{
-                    console.error(err);
-                    callback([]);
-                }
-                db.close();
-            });
-        
+            else{
+                console.error(err);
+                callback([]);
+            }
         });
     }
 
     var remove = function(collName,filter,callback){
-         createDb().open((err,db)=>{
-            if(err){
-                console.error(err);
-                return;
+        var coll = db.collection(collName);
+        coll.remove(filter,((err,r)=>{
+            if(!err){
+                console.log('remove to '+collName+' success !'); 
             }
-            var coll = db.collection(collName);
-            coll.remove(filter,((err,r)=>{
-                 if(!err){
-                    console.log('remove to '+collName+' success !'); 
-                }
-                if(callback){
-                    callback(r);
-                }
-                db.close();
-            }));
-        
-        });
-
+            if(callback){
+                callback(r);
+            }
+        }));
     }
 
     exports.insert = insert;
     exports.queryPage = queryPage;
     exports.remove = remove;
+
+    exports.init = init;

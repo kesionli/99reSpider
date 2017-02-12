@@ -3,10 +3,6 @@ var fs = require('fs');
 var request = require('request');
 var cheerio = require('cheerio');
 var db = require('./db');
-var sleepTime=1000;
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 var getMaxPageIndex = function(callback){
     var url ='http://99re.com/?mode=async&action=get_block&block_id=list_videos_most_views&dir=&from2=1';
@@ -90,7 +86,6 @@ var getVideoUrl = function(index,pages,complete){
       //try to get video url
       var page = pages[index];
         socksGet(page.href,(res)=>{
-            console.log(res.body);
             var html = res.body;
             var videoUrl = '';
             var startIndex = html.indexOf('video_url: \'');
@@ -106,17 +101,15 @@ var getVideoUrl = function(index,pages,complete){
             page.videoUrl =  videoUrl;
             if(page.videoUrl){
                 var videoFileName = page.videoId+'.mp4';
-                var r = request({
-                        url: page.videoUrl
-                    }).on('error',()=>{
-                        console.log('download video error .');
-                    }).on('response',(resp)=>{
-                       if(resp.statusCode===200){
-                            r.pipe(fs.createWriteStream(videoFileName)).on('finish',  ()=> {
-                                console.log('download video '+videoFileName+' finish .');
-                            });
-                       }
-                    });
+                console.log('try to download video '+videoFileName);
+                fs.exists(videoFileName,(exists)=>{
+                    if(!exists){
+                        downloadVideo(videoUrl,videoFileName);
+                    }
+                    else{
+                        console.log(videoFileName +' is exists ');
+                    }
+                });
             }
          
             console.log(page.href);
@@ -135,6 +128,27 @@ var getVideoUrl = function(index,pages,complete){
             var nextIndex = index+1;
             getVideoUrl(nextIndex,pages,complete);;
         });
+}
+
+var downloadVideo=function(videoUrl,videoName,tryTimes){
+    if(tryTimes === undefined){
+        tryTimes = 3;
+    }
+    if(tryTimes == 0){
+        return;
+    }
+    var r = request({
+                        url: videoUrl
+                    }).on('error',()=>{
+                        console.log('download video error .');
+                        downloadVideo(videoUrl,videoName,tryTimes--);
+                    }).on('response',(resp)=>{
+                       if(resp.statusCode===200){
+                            r.pipe(fs.createWriteStream(videoName)).on('finish',  ()=> {
+                                console.log('download video '+videoName+' finish .');
+                            });
+                       }
+                    });
 }
 
 var getVideoId = function(url){

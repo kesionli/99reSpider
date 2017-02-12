@@ -4,7 +4,9 @@ var http = require('http');
 var fs = require('fs');
 var qs = require('querystring')
 var url = require('url');
-//spider.run(1,1727);
+var request = require('request');
+
+db.init();
 
 var server=new http.Server();  
 server.on('request',function(req,res){  
@@ -69,8 +71,21 @@ server.on('request',function(req,res){
             res.write('error paramater .');
             res.end();
         }
-
-     
+    }
+    else if(req.url.indexOf('/v')>=0){
+        var qsObj = url.parse(req.url,true).query;
+        var id = qsObj.id;
+        var videoName = './' + id + '.mp4';
+        fs.exists(videoName,(exists)=>{
+            if(exists){
+                fs.createReadStream(videoName).pipe(res);      
+            }
+            else{
+                res.writeHead(404,{'Content-Type':'text/html'});  
+                res.write('Not find');
+                res.end();
+            }
+        });
     }
     else{
         res.writeHead(404,{'Content-Type':'text/html'});  

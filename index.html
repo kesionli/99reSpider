@@ -64,7 +64,7 @@
             <div class="row" >
                <div class="col-md-3 col-lg-3" ng-repeat="item in items" ng-cloak>
                     <div class="thumbnail v-item" >
-                         <video style="width: 100%;height: 80%" src="{{item.videoUrl|trustUrl}}" poster="{{item.imgSrc}}" controls></video>     
+                         <video style="width: 100%;height: 80%" src="{{item.videoId|trustUrl}}" poster="{{item.imgSrc}}" controls></video>     
                          <div>
                              <a target="_blank" ng-href="{{item.href}}">
                                {{item.title}}
@@ -112,6 +112,7 @@
                     $scope.gettingData = false;
                     r.data.forEach((i)=>{
                         // i.videoUrl=i.videoUrl+'/';
+                        i.videoSrc ='/v?id=' + i.videoId;
                         $scope.items.push(i);
                     });
                 });
