@@ -71,9 +71,7 @@ var selectVideoData=function(html,complete){
     });
 
     var index = 0 ;
-    getVideoUrl(index,pages,()=>{
-        complete();
-    });
+    getVideoUrl(index,pages,complete);
    
 }
 
@@ -138,10 +136,11 @@ var downloadVideo=function(videoUrl,videoName,tryTimes){
         return;
     }
     var r = request({
-                        url: videoUrl
+                        url: videoUrl,
+                        timeout:30000
                     }).on('error',()=>{
-                        console.log('download video error .');
-                        downloadVideo(videoUrl,videoName,tryTimes--);
+                        console.log('download video '+videoName+' error .');
+                        downloadVideo(videoUrl,videoName,tryTimes-1);
                     }).on('response',(resp)=>{
                        if(resp.statusCode===200){
                             r.pipe(fs.createWriteStream(videoName)).on('finish',  ()=> {
@@ -167,12 +166,13 @@ var socksGet=function(url,callback,errCallback){
         }
     }, function(err, res) {
         if(err){
+            console.error('request '+url+' error .');
             console.error(err);
             if(errCallback){
                 errCallback(err);
             }
         }
-        else if(res.body){
+        else {
             callback(res);
         }
       

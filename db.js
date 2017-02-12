@@ -20,10 +20,14 @@
         coll.save(data,(err,r)=>{
             if(!err){
                 console.log('save to '+collName+' success !'); 
+                if(callback){
+                    callback(r);
+                }
             }
-            if(callback){
-                callback(r);
+            else{
+                console.error(err);
             }
+
         });
     };
 
@@ -44,11 +48,15 @@
         var coll = db.collection(collName);
         coll.remove(filter,((err,r)=>{
             if(!err){
-                console.log('remove to '+collName+' success !'); 
+                console.log('remove to '+collName+' success !');
+                if(callback){
+                    callback(r);
+                }
             }
-            if(callback){
-                callback(r);
+            else{
+                console.error(err);
             }
+
         }));
     }
 
