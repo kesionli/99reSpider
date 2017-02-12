@@ -70,7 +70,7 @@ server.on('request',function(req,res){
             db.find({videoUrl:{$ne:''}},(rows)=>{
                 rows.forEach((page)=>{
                     var url = page.videoUrl;
-                    var fileName = page.videoId+'.pm4';
+                    var fileName = page.videoId+'.mp4';
                     spider.downloadVideo(url,fileName);
                 });
             });
