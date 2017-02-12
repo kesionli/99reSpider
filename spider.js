@@ -138,8 +138,9 @@ var downloadVideo=function(videoUrl,videoName,tryTimes){
     var r = request({
                         url: videoUrl,
                         timeout:30000
-                    }).on('error',()=>{
+                    }).on('error',(err)=>{
                         console.log('download video '+videoName+' error .');
+                        console.error(err);
                         downloadVideo(videoUrl,videoName,tryTimes-1);
                     }).on('response',(resp)=>{
                        if(resp.statusCode===200){
@@ -155,7 +156,11 @@ var getVideoId = function(url){
     return arr[arr.length-3];
 }
 
-var socksGet=function(url,callback,errCallback){
+var socksGet=function(url,callback,errCallback,trytimes){
+    if(trytimes===undefined){
+        trytimes = 3;
+    }
+
     request({
         url: url,
         timeout:30000,
@@ -168,8 +173,13 @@ var socksGet=function(url,callback,errCallback){
         if(err){
             console.error('request '+url+' error .');
             console.error(err);
-            if(errCallback){
-                errCallback(err);
+            if(trytimes>0){
+                socksGet(url,callback,errCallback,trytimes-1);
+            }
+            else{
+                if(errCallback){
+                    errCallback(err);
+                }
             }
         }
         else {
@@ -179,5 +189,5 @@ var socksGet=function(url,callback,errCallback){
     });
 }
 
-
+exports.downloadVideo = downloadVideo;
 exports.run = getData;

@@ -60,8 +60,22 @@
         }));
     }
 
+    var find = function(collName,filter,callback){
+        var coll = db.collection(collName);
+        coll.find(filter).toArray((err,r)=>{
+            if(!err){
+                callback(r);
+            }
+            else{
+                console.error(err);
+                callback([]);
+            }
+        })
+    }
+
     exports.insert = insert;
     exports.queryPage = queryPage;
     exports.remove = remove;
+    exports.find = find;
 
     exports.init = init;

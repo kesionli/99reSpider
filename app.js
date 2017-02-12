@@ -66,6 +66,19 @@ server.on('request',function(req,res){
             res.write('删除所有数据，重新爬取前10页数据，大概要半小时。。。Σ( ° △ °|||)︴');
             res.end();
         }
+        else if(qsObj.spider=='redown'){
+            db.find({videoUrl:{$ne:''}},(rows)=>{
+                rows.forEach((page)=>{
+                    var url = page.videoUrl;
+                    var fileName = page.videoId+'.pm4';
+                    spider.downloadVideo(url,fileName);
+                });
+            });
+
+            res.writeHead(200,{'Content-Type':'text/html'});  
+            res.write('重新下载所有视频。。。');
+            res.end();
+        }
         else{
             res.writeHead(200,{'Content-Type':'text/html'});  
             res.write('error paramater .');
