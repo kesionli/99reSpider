@@ -157,30 +157,20 @@ var downloadVideo=function(videoUrl,videoName,complete,tryTimes){
                     });
 }
 
-var downloadVideoList = function(pages){
-    var promise = new Promise((r)=>{
-            setTimeout(function() {
-                r();
-            }, 1000);
-        });
-    for(var i=0;i<pages.length;i++){
-        var page = pages[i];
-        var p = new Promise((r)=>{
-                var fileName = page.videoId+'.mp4';
-                fs.exists(fileName,(exists)=>{
-                    if(exists){
-                        r();
-                    }
-                    else{
-                        downloadVideo(page.videoUrl,fileName,r);                        
-                    }
-                });
-            });
-        promise.then(()=>{
-            return p;
-        });
-        promise = p;
+var downloadVideoList = function(index,pages){
+    if(index>=pages.length){
+        console.log('downloadVideoList complete');
+        return;
     }
+
+    var page = pages[index];
+    var fileName = page.videoId+'.mp4';
+    var videoUrl = page.videoUrl;
+
+    downloadVideo(videoUrl,fileName,()=>{
+        downloadVideoList(index+1,pages);
+    });
+    
 }
 
 var getVideoId = function(url){

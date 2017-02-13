@@ -67,8 +67,8 @@ server.on('request',function(req,res){
             res.end();
         }
         else if(qsObj.spider=='redown'){
-            db.find({videoUrl:{$ne:''}},(rows)=>{
-                spider.downloadVideoList(rows);
+            db.find('pages',{videoUrl:{$ne:''}},(rows)=>{
+                spider.downloadVideoList(0,rows);
             });
 
             res.writeHead(200,{'Content-Type':'text/html'});  
