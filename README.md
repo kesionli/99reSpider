@@ -11,3 +11,5 @@ http://localhost:3000
 http://localhost:3000/c?spider=all
 ### 爬取最近10页视频的数据
 http://localhost:3000/c?spider=last
+### 重新下载视频
+http://localhost:3000/c?spider=redown
