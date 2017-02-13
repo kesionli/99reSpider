@@ -144,7 +144,7 @@ var downloadVideo=function(videoUrl,videoName,complete,tryTimes){
                     }).on('error',(err)=>{
                         console.log('download video '+videoName+' error .');
                         console.error(err);
-                        downloadVideo(videoUrl,videoName,tryTimes-1);
+                        downloadVideo(videoUrl,videoName,complete,tryTimes-1);
                     }).on('response',(resp)=>{
                        if(resp.statusCode===200){
                             r.pipe(fs.createWriteStream(videoName)).on('finish',  ()=> {
