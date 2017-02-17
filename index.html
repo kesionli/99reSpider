@@ -67,7 +67,7 @@
                          <video style="width: 100%;height: 80%" src="{{item.videoId|trustUrl}}" poster="{{item.imgSrc}}" controls></video>     
                          <div>
                              <a target="_blank" ng-href="{{item.href}}">
-                               {{item.title}}
+                               [{{item.videoId}}]{{item.title}} <span ng-show="item.videoUrl" class="text-danger"> *** </span>
                              </a>
                          </div>
                     </div>

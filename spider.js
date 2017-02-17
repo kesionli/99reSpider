@@ -30,7 +30,7 @@ var getData= function(pageIndex,maxPageIndex){
         return;
     }
     console.log('start to get page '+pageIndex);
-    var url ='http://99re.com/?mode=async&action=get_block&block_id=list_videos_most_views&dir=&from2='+pageIndex;
+    var url ='http://www.99re.com/latest-updates/'+pageIndex+'/';
     socksGet(url,(res)=>{
         selectVideoData(res.body,()=>{
             console.log('get page data '+pageIndex+' success .');
