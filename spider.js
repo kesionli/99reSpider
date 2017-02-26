@@ -3,6 +3,7 @@ var fs = require('fs');
 var request = require('request');
 var cheerio = require('cheerio');
 var db = require('./db');
+var conf = require('./conf').conf;
 
 var getMaxPageIndex = function(callback){
     var url ='http://99re.com/?mode=async&action=get_block&block_id=list_videos_most_views&dir=&from2=1';
@@ -129,6 +130,9 @@ var getVideoUrl = function(index,pages,complete){
 }
 
 var downloadVideo=function(videoUrl,videoName,complete,tryTimes){
+    if(!conf.download){
+        return;
+    }
     if(tryTimes === undefined){
         tryTimes = 3;
     }
@@ -182,16 +186,18 @@ var socksGet=function(url,callback,errCallback,trytimes){
     if(trytimes===undefined){
         trytimes = 3;
     }
-
-    request({
-        url: url,
-        timeout:30000,
-        agentClass: Agent,
-        agentOptions: {
-            socksHost: '127.0.0.1', // Defaults to 'localhost'.
-            socksPort: 1080 // Defaults to 1080.
-        }
-    }, function(err, res) {
+    var op = {
+        url:url,
+        timeout:30000
+    };
+    if(conf.proxy){
+        op.agentClass=Agent;
+        op.agentOptions={
+            socksHost:'127.0.0.1',
+            socksPort:1080
+        };
+    }
+    request(op, function(err, res) {
         if(err){
             console.error('request '+url+' error .');
             console.error(err);
