@@ -5,6 +5,7 @@ var fs = require('fs');
 var qs = require('querystring')
 var url = require('url');
 var request = require('request');
+var conf = require('./conf').conf;
 
 db.init();
 
@@ -46,6 +47,15 @@ server.on('request',function(req,res){
     else if(req.url.indexOf('/c')>=0){
         //console spider
         var qsObj = url.parse(req.url,true).query;
+
+        var down = qsObj.down;
+        var proxy = qsObj.proxy;
+        if(down==='true'){
+            conf.download = true;
+        }
+        if(proxy==='true'){
+            conf.proxy = true;
+        }
 
         if(qsObj.spider=='all'){
             //to get all 99re vedios 
@@ -105,4 +115,4 @@ server.on('request',function(req,res){
 });  
   
 server.listen(3456);  
-console.log('http server started...port:3000');
+console.log('http server started...port:3456');

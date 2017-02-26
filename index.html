@@ -64,10 +64,10 @@
             <div class="row" >
                <div class="col-md-3 col-lg-3" ng-repeat="item in items" ng-cloak>
                     <div class="thumbnail v-item" >
-                         <video style="width: 100%;height: 80%" src="{{item.videoId|trustUrl}}" poster="{{item.imgSrc}}" controls></video>     
+                         <video style="width: 100%;height: 80%" src="{{item.videoUrl|trustUrl}}" poster="{{item.imgSrc}}" controls></video>     
                          <div>
-                             <a target="_blank" ng-href="{{item.href}}">
-                               [{{item.videoId}}]{{item.title}} <span ng-show="item.videoUrl" class="text-danger"> *** </span>
+                             <a target="_blank" ng-href="{{item.href}}" ng-class="item.videoUrl?'text-danger':''">
+                               [{{item.videoId}}]{{item.title}}
                              </a>
                          </div>
                     </div>
