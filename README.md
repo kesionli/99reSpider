@@ -6,10 +6,10 @@
 git clone https://github.com/kklldog/99reSpider.git  
 node app.js
 ### 浏览
-http://localhost:3000
+http://localhost:3456
 ### 爬取所有视频信息
-http://localhost:3000/c?spider=all
+http://localhost:3456/c?spider=all
 ### 爬取最近10页视频的数据
-http://localhost:3000/c?spider=last
+http://localhost:3456/c?spider=last
 ### 重新下载视频
-http://localhost:3000/c?spider=redown
+http://localhost:3456/c?spider=redown
